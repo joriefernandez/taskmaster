@@ -19,13 +19,7 @@ public class TaskMaster {
 
     public TaskMaster(){}
 
-    public TaskMaster(String title, String description) {
-        this.title = title;
-        this.description = description;
-        this.status = "available";
-    }
-
-
+    //Constructor
     public TaskMaster(String title, String description, String assignee) {
         this.title = title;
         this.description = description;
@@ -80,9 +74,9 @@ public class TaskMaster {
         this.assignee = assignee;
     }
 
-    //Helper method
+    //Helper method to update status based on assignee
     private String setInitialStatus(String assignee){
-        if(assignee != null){
+        if(assignee != null && !assignee.equals("")){
             return "assigned";
         }
 
