@@ -11,18 +11,26 @@ public class TaskMaster {
 
     private String title;
 
-
     private String description;
 
-
     private String status;
+
+    private String assignee;
 
     public TaskMaster(){}
 
     public TaskMaster(String title, String description) {
         this.title = title;
         this.description = description;
-        this.status = "Available";
+        this.status = "available";
+    }
+
+
+    public TaskMaster(String title, String description, String assignee) {
+        this.title = title;
+        this.description = description;
+        this.status = setInitialStatus(assignee);
+        this.assignee = assignee;
     }
 
     @DynamoDBHashKey
@@ -62,4 +70,23 @@ public class TaskMaster {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @DynamoDBAttribute
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
+    }
+
+    //Helper method
+    private String setInitialStatus(String assignee){
+        if(assignee != null){
+            return "assigned";
+        }
+
+        return "available";
+    }
+
 }

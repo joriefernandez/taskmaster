@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class TaskMasterController {
 
-    private static final String AVAILABLE="Available";
-    private static final String ASSIGNED="Assigned";
-    private static final String ACCEPTED="Accepted";
-    private static final String FINISHED="Finished";
+    private static final String AVAILABLE="available";
+    private static final String ASSIGNED="assigned";
+    private static final String ACCEPTED="accepted";
+    private static final String FINISHED="finished";
 
 
     @Autowired
@@ -25,11 +25,13 @@ public class TaskMasterController {
     }
 
     @PostMapping("/tasks")
-    public ResponseEntity<Iterable<TaskMaster>> addNewTask(@RequestParam String title, @RequestParam  String desc){
+    public ResponseEntity<TaskMaster> addNewTask(@RequestParam String title,
+                                                           @RequestParam  String description,
+                                                           @RequestParam String assignee){
 
-        TaskMaster newTask = new TaskMaster(title, desc);
+        TaskMaster newTask = new TaskMaster(title, description, assignee);
         repository.save(newTask);
-        return ResponseEntity.ok(repository.findAll());
+        return ResponseEntity.ok(newTask);
     }
 
     @PutMapping("/tasks/{id}/state")
@@ -50,5 +52,11 @@ public class TaskMasterController {
 
         repository.save(currentTask);
         return ResponseEntity.ok(currentTask);
+    }
+
+    @GetMapping("/users/{name}/tasks")
+    public ResponseEntity<Iterable<TaskMaster>> getUserTasks(@PathVariable String assignee){
+        Iterable<TaskMaster> results = repository.findTaskByAssignee(assignee);
+        return ResponseEntity.ok(results);
     }
 }
