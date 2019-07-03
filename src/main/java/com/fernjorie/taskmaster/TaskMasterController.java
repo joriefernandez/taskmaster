@@ -18,12 +18,14 @@ public class TaskMasterController {
     @Autowired
     TaskInfoRepository repository;
 
+    //Display all tasks
     @GetMapping("/tasks")
     public ResponseEntity<Iterable<TaskMaster>> getTasks(){
         Iterable<TaskMaster> results = repository.findAll();
         return ResponseEntity.ok(results);
     }
 
+    /****** Create new task *********/
     @PostMapping("/tasks")
     public ResponseEntity<TaskMaster> addNewTask(@RequestParam String title,
                                                            @RequestParam  String description,
@@ -34,29 +36,50 @@ public class TaskMasterController {
         return ResponseEntity.ok(newTask);
     }
 
+    /****** Update task *********/
     @PutMapping("/tasks/{id}/state")
     public ResponseEntity<TaskMaster> updateTask(@PathVariable String id){
         TaskMaster currentTask = repository.findById(id).get();
 
-        switch(currentTask.getStatus()){
-            case AVAILABLE:
-                currentTask.setStatus(ASSIGNED);
-                break;
-            case ASSIGNED:
-                currentTask.setStatus(ACCEPTED);
-                break;
-            case ACCEPTED:
-                currentTask.setStatus(FINISHED);
-                break;
-        }
+        //Only time to advance is if there is an assignee on the task
+        if(currentTask.getAssignee() != null) {
 
-        repository.save(currentTask);
+            switch (currentTask.getStatus()) {
+                case AVAILABLE:
+                    currentTask.setStatus(ASSIGNED);
+                    break;
+                case ASSIGNED:
+                    currentTask.setStatus(ACCEPTED);
+                    break;
+                case ACCEPTED:
+                    currentTask.setStatus(FINISHED);
+                    break;
+            }
+
+            repository.save(currentTask);
+        }
         return ResponseEntity.ok(currentTask);
     }
 
+    /****** Display tasks based on the assignee *********/
     @GetMapping("/users/{name}/tasks")
-    public ResponseEntity<Iterable<TaskMaster>> getUserTasks(@PathVariable String assignee){
-        Iterable<TaskMaster> results = repository.findTaskByAssignee(assignee);
+    public ResponseEntity<Iterable<TaskMaster>> getUserTasks(@PathVariable String name){
+        Iterable<TaskMaster> results = repository.findTaskByAssignee(name);
         return ResponseEntity.ok(results);
+    }
+
+    /****** Re-assign the task *********/
+    @PutMapping("/tasks/{id}/assign/{assignee}")
+    public ResponseEntity<TaskMaster> updateAssignee(@PathVariable String id, @PathVariable String assignee){
+        TaskMaster current = repository.findById(id).get();
+
+        // Check if the assignee is different from the current, if so reset status
+        if(!assignee.equals(current.getAssignee())){
+            current.setStatus(ASSIGNED);
+            current.setAssignee(assignee);
+            repository.save(current);
+        }
+
+        return ResponseEntity.ok(current);
     }
 }
