@@ -5,5 +5,7 @@ This is an application that allows user to create, update, or view tasks. Routes
 3. /tasks/{id}/status - to update status of the task
 
 ## Link to site
+http://taskmasterapp.us-east-2.elasticbeanstalk.com
 
 ## Deployment issues
+* Initial deployment's status is degraded - had to wait a couple minutes and refresh
