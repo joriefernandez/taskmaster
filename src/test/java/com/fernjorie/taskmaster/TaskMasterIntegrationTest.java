@@ -44,7 +44,7 @@ public class TaskMasterIntegrationTest {
 
     @Test
     public void readWriteTestCase() {
-        TaskMaster test = new TaskMaster("Create task", "Task lab");
+        TaskMaster test = new TaskMaster("Create task", "Task lab", "Jing");
         repository.save(test);
 
         List<TaskMaster> result = (List<TaskMaster>) repository.findAll();
@@ -52,7 +52,8 @@ public class TaskMasterIntegrationTest {
         assertTrue("Not empty", result.size() > 0);
         assertTrue("Contains item with expected description", result.get(0).getDescription().equals("Task lab"));
         assertTrue("Contains item with expected title", result.get(0).getTitle().equals("Create task"));
-        assertTrue("Contains item with expected status", result.get(0).getStatus().equals("Available"));
+        assertTrue("Contains item with expected status", result.get(0).getStatus().equals("assigned"));
+        assertTrue("Contains item with expected assignee", result.get(0).getAssignee().equals("Jing"));
     }
 
 }
