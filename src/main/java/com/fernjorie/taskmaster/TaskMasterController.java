@@ -91,8 +91,9 @@ public class TaskMasterController {
         return ResponseEntity.ok(current);
     }
 
+    @CrossOrigin
     @PostMapping("/tasks/{id}/images")
-    public TaskMaster uploadFile(
+    public ResponseEntity<TaskMaster> uploadFile(
             @PathVariable String id,
             @RequestPart(value = "file") MultipartFile file
     ){
@@ -101,7 +102,14 @@ public class TaskMasterController {
         TaskMaster currentTask = repository.findById(id).get();
         currentTask.setImgUrl(pic);
         repository.save(currentTask);
-        return currentTask;
+        return ResponseEntity.ok(currentTask);
 
+    }
+
+    @CrossOrigin
+    @GetMapping("/tasks/{id}")
+    public ResponseEntity<TaskMaster> getWithImg(@PathVariable String id){
+        TaskMaster currentTask = repository.findById(id).get();
+        return ResponseEntity.ok(currentTask);
     }
 }
