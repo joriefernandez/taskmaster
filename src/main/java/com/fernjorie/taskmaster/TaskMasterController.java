@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Controller
@@ -13,6 +14,13 @@ public class TaskMasterController {
     private static final String ASSIGNED="assigned";
     private static final String ACCEPTED="accepted";
     private static final String FINISHED="finished";
+
+    private S3Client s3Client;
+
+    @Autowired
+    TaskMasterController(S3Client s3Client) {
+        this.s3Client = s3Client;
+    }
 
 
     @Autowired
@@ -81,5 +89,19 @@ public class TaskMasterController {
         }
 
         return ResponseEntity.ok(current);
+    }
+
+    @PostMapping("/tasks/{id}/images")
+    public TaskMaster uploadFile(
+            @PathVariable String id,
+            @RequestPart(value = "file") MultipartFile file
+    ){
+
+        String pic = this.s3Client.uploadFile(file);
+        TaskMaster currentTask = repository.findById(id).get();
+        currentTask.setImgUrl(pic);
+        repository.save(currentTask);
+        return currentTask;
+
     }
 }
