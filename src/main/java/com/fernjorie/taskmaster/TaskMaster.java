@@ -19,6 +19,8 @@ public class TaskMaster {
 
     private String imgUrl;
 
+    private String imgResized;
+
     public TaskMaster(){}
 
 
@@ -95,6 +97,15 @@ public class TaskMaster {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    @DynamoDBAttribute
+    public String getImgResized() {
+        return imgResized;
+    }
+
+    public void setImgResized(String imgResized) {
+        this.imgResized = imgResized;
     }
 
     //Helper method to update status based on assignee

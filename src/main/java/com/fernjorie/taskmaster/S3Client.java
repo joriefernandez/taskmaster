@@ -34,6 +34,9 @@ public class S3Client {
     @Value("${amazon.aws.bucket}")
     private String bucket;
 
+    @Value("${amazon.aws.bucket.thumbnail}")
+    private String thumbnailEndpoint;
+
 
     @PostConstruct
     private void initializeAmazon() {
@@ -41,12 +44,13 @@ public class S3Client {
         this.s3client = new AmazonS3Client(credentials);
     }
 
-    public String uploadFile(MultipartFile multipartFile) {
-        String fileUrl = "";
+    public String[] uploadFile(MultipartFile multipartFile) {
+        String[] fileUrl = new String[2];
         try {
             File file = convertMultiPartToFile(multipartFile);
             String fileName = generateFileName(multipartFile);
-            fileUrl = endpointUrl + "/" + fileName;
+            fileUrl[0] = endpointUrl + "/" + fileName;
+            fileUrl[1] = thumbnailEndpoint + "/" + fileName;
             uploadFileTos3bucket(fileName, file);
             file.delete();
         } catch (Exception e) {

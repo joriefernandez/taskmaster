@@ -98,9 +98,10 @@ public class TaskMasterController {
             @RequestPart(value = "file") MultipartFile file
     ){
 
-        String pic = this.s3Client.uploadFile(file);
+        String[] pic = this.s3Client.uploadFile(file);
         TaskMaster currentTask = repository.findById(id).get();
-        currentTask.setImgUrl(pic);
+        currentTask.setImgUrl(pic[0]);
+        currentTask.setImgResized(pic[1]);
         repository.save(currentTask);
         return ResponseEntity.ok(currentTask);
 
