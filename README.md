@@ -17,4 +17,4 @@ http://taskmasterapp.us-east-2.elasticbeanstalk.com
 
 ## Lambda Warmer
 Lambda warmer is called taskmasterWarmer which invokes taskmasterLambda.
-[Lambda Warmer](./warmer)
+* [Lambda Warmer Screenshots](./warmer)
