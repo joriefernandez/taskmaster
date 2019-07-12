@@ -16,4 +16,5 @@ http://taskmasterapp.us-east-2.elasticbeanstalk.com
 * Initial deployment's status is degraded - had to wait a couple minutes and refresh
 
 ## Lambda Warmer
+Lambda warmer is called taskmasterWarmer which invokes taskmasterLambda.
 [Lambda Warmer](./warmer)
